@@ -25,6 +25,7 @@ function Letter({ correct, typed }) {
 }
 
 function App() {
+  const [phrasesList, setPhrasesList] = useState([]);
   const [gameText, setGameText] = useState("");
 
   const inputRef = useRef(null);
@@ -39,7 +40,7 @@ function App() {
   const passedTime = (new Date() - startTime) / 1000;
   const remainigTime = (gameTimeInSeconds - passedTime).toFixed(0);
 
-  useEffect(() => {
+  const fetchAndSetText = () =>
     fetch(
       "https://api.themoviedb.org/3/trending/all/day?api_key=6a5284a99c6f041ce28059355ef6484d"
     ).then((response) => {
@@ -47,12 +48,18 @@ function App() {
         const randomIndex = Math.floor(Math.random() * 10);
         const numberOfOvberviews = 8;
         const randomTexts = result.results
-          .slice(randomIndex, numberOfOvberviews)
-          .map((movie) => movie.overview || "")
-          .join("");
-        setGameText(randomTexts);
+          .filter((movie) => movie.overview)
+          .map((movie) => movie.overview);
+
+        setPhrasesList(randomTexts);
+        setGameText(
+          randomTexts.slice(randomIndex, numberOfOvberviews).join("")
+        );
       });
     });
+
+  useEffect(() => {
+    fetchAndSetText();
   }, []);
 
   useInterval(() => {
@@ -73,6 +80,13 @@ function App() {
 
   function focusOnTextArea() {
     inputRef.current.focus();
+  }
+
+  function replay() {
+    const randomIndex = Math.floor(Math.random() * 10);
+    const numberOfOvberviews = 8;
+
+    setGameText(phrasesList.slice(randomIndex, numberOfOvberviews).join(""));
   }
 
   return (
@@ -98,6 +112,7 @@ function App() {
           />
         ))}
       </div>
+      <button onClick={replay}>replay</button>
     </div>
   );
 }
