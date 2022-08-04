@@ -5,9 +5,16 @@ export default class Game {
     this.mistakes = 0;
   }
 
-  onType(letter) {
-    const correctLetter = this.text[this.typed.length];
-    if (correctLetter !== letter) this.mistakes += 1;
-    this.typed += letter;
+  onType(newTyped) {
+    if (newTyped.length < this.typed.length) {
+      this.typed = newTyped;
+      return;
+    }
+
+    const letterPosition = this.typed.length;
+    const correctLetter = this.text[letterPosition];
+    const typedLetter = newTyped[letterPosition];
+    if (correctLetter !== typedLetter) this.mistakes += 1;
+    this.typed += typedLetter;
   }
 }
