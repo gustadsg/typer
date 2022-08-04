@@ -21,6 +21,17 @@ describe("test", () => {
       expect(game.typed).toBe("a");
     });
 
+    it("should should just replace old typed with new when deletion occours", () => {
+      const text = "abc";
+      const game = new Game(text);
+
+      game.onType("a");
+      game.onType("ab");
+      game.onType("a");
+
+      expect(game.typed).toBe("a");
+    });
+
     it("should count the mistakes", () => {
       const text = "any_text";
       const game = new Game(text);
