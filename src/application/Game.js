@@ -6,6 +6,7 @@ export default class Game {
     this.timeToEndInSeconds = timeInSeconds;
     this.started = false;
     this.ended = false;
+    this.startedAt = null;
   }
 
   onType(newTyped) {
@@ -19,6 +20,7 @@ export default class Game {
 
   startGame() {
     this.started = true;
+    this.startedAt = new Date();
     setTimeout(() => {
       this.endGame();
     }, this.timeToEndInSeconds * 1000);
@@ -46,5 +48,22 @@ export default class Game {
 
   handleMistakes({ typedLetter, correctLetter }) {
     if (correctLetter !== typedLetter) this.mistakes += 1;
+  }
+
+  getTypingSpeed() {
+    const charsTyped = this.typed.length;
+    if (!charsTyped) return { lpm: 0, wpm: 0 };
+
+    const oneMinuteInSeconds = 60;
+    const oneSecondInMilliseconds = 1000;
+    const timePassedInSeconds =
+      (new Date() - this.startedAt) / oneSecondInMilliseconds;
+    const cleanTyped = this.typed.replace(/\s/g, "");
+    const lpm = (cleanTyped.length / timePassedInSeconds) * oneMinuteInSeconds;
+
+    const wordsTyped = this.typed.split(" ").length;
+    const wpm = (wordsTyped / timePassedInSeconds) * 60;
+
+    return { lpm, wpm };
   }
 }
