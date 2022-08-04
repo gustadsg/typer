@@ -11,6 +11,7 @@ export default class Game {
     this.timeToEndInSeconds = timeInSeconds;
     this.ended = false;
     this.startedAt = null;
+    this.speed = { lpm: 0, wpm: 0 };
   }
 
   onType(newTyped) {
@@ -55,8 +56,10 @@ export default class Game {
 
   getTypingSpeed() {
     const charsTyped = this.typed.length;
-    if (!charsTyped) return { lpm: 0, wpm: 0 };
-
+    if (!charsTyped) {
+      this.speed = { lpm: 0, wpm: 0 };
+      return;
+    }
     const timePassedInSeconds =
       (new Date() - this.startedAt) / ONE_SECOND_IN_MILLISECONDS;
     const cleanTyped = this.typed.replace(/\s/g, "");
@@ -66,6 +69,6 @@ export default class Game {
     const wordsTyped = this.typed.split(" ").length;
     const wpm = (wordsTyped / timePassedInSeconds) * ONE_MINUTE_IN_SECONDS;
 
-    return { lpm, wpm };
+    this.speed = { lpm, wpm };
   }
 }

@@ -174,10 +174,10 @@ describe("test", () => {
     it("should return 0 if user typed nothing", () => {
       const { game } = makeSUT({});
 
-      const { lpm, wpm } = game.getTypingSpeed();
+      game.getTypingSpeed();
 
-      expect(lpm).toBe(0);
-      expect(wpm).toBe(0);
+      expect(game.speed.lpm).toBe(0);
+      expect(game.speed.wpm).toBe(0);
     });
 
     it("should return correctly if user typed - case 1", () => {
@@ -187,10 +187,10 @@ describe("test", () => {
 
       jest.advanceTimersByTime(ONE_SECOND_IN_MILLISECONDS);
 
-      const { lpm, wpm } = game.getTypingSpeed();
+      game.getTypingSpeed();
 
-      expect(lpm).toBe(userSpeed);
-      expect(wpm).toBe(userSpeed);
+      expect(game.speed.lpm).toBe(userSpeed);
+      expect(game.speed.wpm).toBe(userSpeed);
     });
 
     it("should return correctly if user typed - case 2", () => {
@@ -201,10 +201,10 @@ describe("test", () => {
       game.onType("a");
       game.onType("aa");
       jest.advanceTimersByTime(ONE_SECOND_IN_MILLISECONDS);
-      const { lpm, wpm } = game.getTypingSpeed();
+      game.getTypingSpeed();
 
-      expect(lpm).toBe(lpmSpeed);
-      expect(wpm).toBe(wpmSpeed);
+      expect(game.speed.lpm).toBe(lpmSpeed);
+      expect(game.speed.wpm).toBe(wpmSpeed);
     });
 
     it("should return correctly if user typed - case 3", () => {
@@ -221,10 +221,10 @@ describe("test", () => {
       game.onType("aa a a ");
       game.onType("aa a a a");
       jest.advanceTimersByTime(ONE_SECOND_IN_MILLISECONDS);
-      const { lpm, wpm } = game.getTypingSpeed();
+      game.getTypingSpeed();
 
-      expect(lpm).toBe(lpmSpeed);
-      expect(wpm).toBe(wpmSpeed);
+      expect(game.speed.lpm).toBe(lpmSpeed);
+      expect(game.speed.wpm).toBe(wpmSpeed);
     });
   });
 });
