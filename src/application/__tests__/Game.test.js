@@ -32,6 +32,7 @@ describe("test", () => {
 
       expect(game.started).toBe(true);
     });
+
     it("should call startGame only once a game", () => {
       const { game } = makeSUT({});
       const startGameSpy = jest.spyOn(game, "startGame");
@@ -42,6 +43,20 @@ describe("test", () => {
 
       expect(startGameSpy).toBeCalledTimes(1);
     });
+
+    it("should end game after given time", () => {
+      const timeInSeconds = 60;
+      const { game } = makeSUT({ timeInSeconds });
+      const endGameSpy = jest.spyOn(game, "endGame");
+
+      game.onType("a");
+
+      expect(game.ended).toBe(true);
+      expect(endGameSpy).toBeCalledTimes(1);
+      expect(setTimeout).toBeCalledTimes(1);
+      expect(setTimeout).toHaveReturnedWith(timeInSeconds * 1000);
+    });
+
     it("should append typed letter to typed internal var", () => {
       const { game } = makeSUT({});
 
