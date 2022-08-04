@@ -18,7 +18,10 @@ export default class Game {
     if (this.ended) return;
     if (!this.startedAt) this.startGame();
     const isDeletion = this.handleDeletion(newTyped);
-    if (isDeletion) return;
+    if (isDeletion) {
+      this.getTypingSpeed();
+      return;
+    }
 
     this.handleAppend(newTyped);
     this.getTypingSpeed();
