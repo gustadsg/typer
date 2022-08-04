@@ -4,19 +4,18 @@ import {
 } from "../utils/constants";
 
 export default class Game {
-  constructor({ text, timeInSeconds = 60 }) {
+  constructor({ text, timeInSeconds = ONE_MINUTE_IN_SECONDS }) {
     this.text = text;
     this.typed = "";
     this.mistakes = 0;
     this.timeToEndInSeconds = timeInSeconds;
-    this.started = false;
     this.ended = false;
     this.startedAt = null;
   }
 
   onType(newTyped) {
     if (this.ended) return;
-    if (!this.started) this.startGame();
+    if (!this.startedAt) this.startGame();
     const isDeletion = this.handleDeletion(newTyped);
     if (isDeletion) return;
 
@@ -24,7 +23,6 @@ export default class Game {
   }
 
   startGame() {
-    this.started = true;
     this.startedAt = new Date();
     setTimeout(() => {
       this.endGame();

@@ -27,11 +27,14 @@ describe("test", () => {
   describe("onType", () => {
     it("should call startGame when first letter is pressed", () => {
       const { game } = makeSUT({});
+      const startGameSpy = jest.spyOn(game, "startGame");
+      expect(game.startedAt).toBeNull();
 
       const typed = "a";
       game.onType(typed);
 
-      expect(game.started).toBe(true);
+      expect(startGameSpy).toBeCalledTimes(1);
+      expect(game.startedAt).not.toBeNull();
     });
 
     it("should call startGame only once a game", () => {
