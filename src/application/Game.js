@@ -21,6 +21,7 @@ export default class Game {
     if (isDeletion) return;
 
     this.handleAppend(newTyped);
+    this.getTypingSpeed();
   }
 
   startGame() {
