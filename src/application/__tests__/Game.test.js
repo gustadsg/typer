@@ -71,6 +71,27 @@ describe("test", () => {
       expect(game.typed).toBe("a");
     });
 
+    it("should call handleAppend on apppend", () => {
+      const { game } = makeSUT({});
+      const handleAppendSpy = jest.spyOn(game, "handleAppend");
+
+      game.onType("a");
+
+      expect(handleAppendSpy).toBeCalledTimes(1);
+      expect(handleAppendSpy).toBeCalledWith("a");
+    });
+
+    it("should call handleDeletion with correct value", () => {
+      const { game } = makeSUT({});
+      const handleDeletionSpy = jest.spyOn(game, "handleDeletion");
+
+      game.onType("a");
+
+      expect(handleDeletionSpy).toBeCalledTimes(1);
+    });
+  });
+
+  describe("handleAppend", () => {
     it("should append typed letter to typed internal var", () => {
       const { game } = makeSUT({});
 
@@ -79,7 +100,9 @@ describe("test", () => {
 
       expect(game.typed).toBe("a");
     });
+  });
 
+  describe("handleDeletion", () => {
     it("should should just replace old typed with new when deletion occours", () => {
       const { game } = makeSUT({ text: "abc" });
 
@@ -89,7 +112,9 @@ describe("test", () => {
 
       expect(game.typed).toBe("a");
     });
+  });
 
+  describe("handleMistakes", () => {
     it("should count the mistakes", () => {
       const { game } = makeSUT({});
 

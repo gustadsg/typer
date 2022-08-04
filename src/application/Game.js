@@ -11,17 +11,10 @@ export default class Game {
   onType(newTyped) {
     if (this.ended) return;
     if (!this.started) this.startGame();
+    const isDeletion = this.handleDeletion(newTyped);
+    if (isDeletion) return;
 
-    if (newTyped.length < this.typed.length) {
-      this.typed = newTyped;
-      return;
-    }
-
-    const letterPosition = this.typed.length;
-    const correctLetter = this.text[letterPosition];
-    const typedLetter = newTyped[letterPosition];
-    if (correctLetter !== typedLetter) this.mistakes += 1;
-    this.typed += typedLetter;
+    this.handleAppend(newTyped);
   }
 
   startGame() {
@@ -33,5 +26,25 @@ export default class Game {
 
   endGame() {
     this.ended = true;
+  }
+
+  handleDeletion(newTyped) {
+    if (newTyped.length < this.typed.length) {
+      this.typed = newTyped;
+      return true;
+    }
+    return false;
+  }
+
+  handleAppend(newTyped) {
+    const letterPosition = this.typed.length;
+    const correctLetter = this.text[letterPosition];
+    const typedLetter = newTyped[letterPosition];
+    this.handleMistakes({ typedLetter, correctLetter });
+    this.typed += typedLetter;
+  }
+
+  handleMistakes({ typedLetter, correctLetter }) {
+    if (correctLetter !== typedLetter) this.mistakes += 1;
   }
 }
