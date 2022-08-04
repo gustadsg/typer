@@ -96,6 +96,17 @@ describe("test", () => {
 
       expect(handleDeletionSpy).toBeCalledTimes(1);
     });
+
+    it("should call getTypingSpeed every time a key is pressed", () => {
+      const { game } = makeSUT({});
+      const getTypingSpeedSpy = jest.spyOn(game, "getTypingSpeed");
+
+      game.onType("a");
+      game.onType("aa");
+      game.onType("aaa");
+
+      expect(getTypingSpeedSpy).toBeCalledTimes(3);
+    });
   });
 
   describe("handleAppend", () => {
