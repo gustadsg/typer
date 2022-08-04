@@ -24,6 +24,14 @@ describe("test", () => {
   });
 
   describe("onType", () => {
+    it("should call startGame when first letter is pressed", () => {
+      const { game } = makeSUT({});
+
+      const typed = "a";
+      game.onType(typed);
+
+      expect(game.started).toBe(true);
+    });
     it("should append typed letter to typed internal var", () => {
       const { game } = makeSUT({});
 

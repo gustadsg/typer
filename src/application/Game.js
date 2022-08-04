@@ -4,11 +4,12 @@ export default class Game {
     this.typed = "";
     this.mistakes = 0;
     this.timeToEndInSeconds = timeInSeconds;
+    this.started = false;
     this.ended = false;
   }
 
   onType(newTyped) {
-    if (this.typed.length === 0) this.startGame();
+    if (!this.started) this.startGame();
 
     if (newTyped.length < this.typed.length) {
       this.typed = newTyped;
@@ -23,6 +24,7 @@ export default class Game {
   }
 
   startGame() {
+    this.started = true;
     setTimeout(() => {
       this.endGame();
     }, this.timeToEndInSeconds * 1000);
