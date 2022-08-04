@@ -1,9 +1,22 @@
 import Game from "../Game";
 
+global.setTimeout = jest.fn((callback, timeInMilliseconds) => {
+  callback();
+  return timeInMilliseconds;
+});
+
+function makeSUT({ text = "any_text", timeInSeconds = 60 }) {
+  const game = new Game({
+    text,
+    timeInSeconds,
+  });
+
+  return { game, text, timeInSeconds };
+}
+
 describe("test", () => {
   it("should create an empty game", () => {
-    const text = "any_text";
-    const game = new Game(text);
+    const { text, game } = makeSUT({});
 
     expect(game.mistakes).toBe(0);
     expect(game.typed).toBe("");
@@ -12,8 +25,7 @@ describe("test", () => {
 
   describe("onType", () => {
     it("should append typed letter to typed internal var", () => {
-      const text = "any_text";
-      const game = new Game(text);
+      const { game } = makeSUT({});
 
       const typed = "a";
       game.onType(typed);
@@ -22,8 +34,7 @@ describe("test", () => {
     });
 
     it("should should just replace old typed with new when deletion occours", () => {
-      const text = "abc";
-      const game = new Game(text);
+      const { game } = makeSUT({ text: "abc" });
 
       game.onType("a");
       game.onType("ab");
@@ -33,8 +44,7 @@ describe("test", () => {
     });
 
     it("should count the mistakes", () => {
-      const text = "any_text";
-      const game = new Game(text);
+      const { game } = makeSUT({});
 
       game.onType("a");
       game.onType("an");
@@ -49,8 +59,7 @@ describe("test", () => {
     });
 
     it("should count the mistakes - consider deletion", () => {
-      const text = "any_text";
-      const game = new Game(text);
+      const { game } = makeSUT({});
 
       game.onType("a");
       game.onType("an");
@@ -73,8 +82,7 @@ describe("test", () => {
     });
 
     it("should count the mistakes with typed bigger than text", () => {
-      const text = "a";
-      const game = new Game(text);
+      const { game } = makeSUT({ text: "a" });
 
       game.onType("a");
       game.onType("ab");
