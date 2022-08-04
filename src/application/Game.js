@@ -1,3 +1,8 @@
+import {
+  ONE_MINUTE_IN_SECONDS,
+  ONE_SECOND_IN_MILLISECONDS,
+} from "../utils/constants";
+
 export default class Game {
   constructor({ text, timeInSeconds = 60 }) {
     this.text = text;
@@ -54,15 +59,14 @@ export default class Game {
     const charsTyped = this.typed.length;
     if (!charsTyped) return { lpm: 0, wpm: 0 };
 
-    const oneMinuteInSeconds = 60;
-    const oneSecondInMilliseconds = 1000;
     const timePassedInSeconds =
-      (new Date() - this.startedAt) / oneSecondInMilliseconds;
+      (new Date() - this.startedAt) / ONE_SECOND_IN_MILLISECONDS;
     const cleanTyped = this.typed.replace(/\s/g, "");
-    const lpm = (cleanTyped.length / timePassedInSeconds) * oneMinuteInSeconds;
+    const lpm =
+      (cleanTyped.length / timePassedInSeconds) * ONE_MINUTE_IN_SECONDS;
 
     const wordsTyped = this.typed.split(" ").length;
-    const wpm = (wordsTyped / timePassedInSeconds) * 60;
+    const wpm = (wordsTyped / timePassedInSeconds) * ONE_MINUTE_IN_SECONDS;
 
     return { lpm, wpm };
   }

@@ -1,8 +1,12 @@
+import {
+  ONE_MINUTE_IN_SECONDS,
+  ONE_SECOND_IN_MILLISECONDS,
+} from "../../utils/constants";
 import Game from "../Game";
 
 jest.useFakeTimers();
 
-function makeSUT({ text = "any_text", timeInSeconds = 60 }) {
+function makeSUT({ text = "any_text", timeInSeconds = ONE_MINUTE_IN_SECONDS }) {
   const game = new Game({
     text,
     timeInSeconds,
@@ -57,7 +61,7 @@ describe("test", () => {
       expect(setTimeoutSpy).toBeCalledTimes(1);
       expect(setTimeoutSpy).toHaveBeenCalledWith(
         expect.any(Function),
-        timeInSeconds * 1000
+        timeInSeconds * ONE_SECOND_IN_MILLISECONDS
       );
     });
 
@@ -175,11 +179,10 @@ describe("test", () => {
 
     it("should return correctly if user typed - case 1", () => {
       const { game } = makeSUT({});
-      const oneSecondInMilliseconds = 1000;
       const userSpeed = 60;
       game.onType("a");
 
-      jest.advanceTimersByTime(oneSecondInMilliseconds);
+      jest.advanceTimersByTime(ONE_SECOND_IN_MILLISECONDS);
 
       const { lpm, wpm } = game.getTypingSpeed();
 
@@ -189,13 +192,12 @@ describe("test", () => {
 
     it("should return correctly if user typed - case 2", () => {
       const { game } = makeSUT({});
-      const oneSecondInMilliseconds = 1000;
       const lpmSpeed = 60 * 2;
       const wpmSpeed = 60;
 
       game.onType("a");
       game.onType("aa");
-      jest.advanceTimersByTime(oneSecondInMilliseconds);
+      jest.advanceTimersByTime(ONE_SECOND_IN_MILLISECONDS);
       const { lpm, wpm } = game.getTypingSpeed();
 
       expect(lpm).toBe(lpmSpeed);
@@ -204,7 +206,6 @@ describe("test", () => {
 
     it("should return correctly if user typed - case 3", () => {
       const { game } = makeSUT({});
-      const oneSecondInMilliseconds = 1000;
       const lpmSpeed = 60 * 5;
       const wpmSpeed = 60 * 4;
 
@@ -216,7 +217,7 @@ describe("test", () => {
       game.onType("aa a a");
       game.onType("aa a a ");
       game.onType("aa a a a");
-      jest.advanceTimersByTime(oneSecondInMilliseconds);
+      jest.advanceTimersByTime(ONE_SECOND_IN_MILLISECONDS);
       const { lpm, wpm } = game.getTypingSpeed();
 
       expect(lpm).toBe(lpmSpeed);
