@@ -87,6 +87,11 @@ function App() {
     const numberOfOvberviews = 8;
 
     setGameText(phrasesList.slice(randomIndex, numberOfOvberviews).join(""));
+    inputRef.current.value = "";
+    gameRef.current = new Game({
+      text: gameText,
+      timeInSeconds: gameTimeInSeconds,
+    });
   }
 
   return (
