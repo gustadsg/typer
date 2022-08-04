@@ -36,5 +36,29 @@ describe("test", () => {
 
       expect(game.mistakes).toBe(4);
     });
+
+    it("should count the mistakes - consider deletion", () => {
+      const text = "any_text";
+      const game = new Game(text);
+
+      game.onType("a");
+      game.onType("an");
+      game.onType("any");
+      game.onType("any_");
+      game.onType("any_0");
+      game.onType("any_00");
+      game.onType("any_000");
+      game.onType("any_0000");
+      game.onType("any_000");
+      game.onType("any_00");
+      game.onType("any_0");
+      game.onType("any_");
+      game.onType("any_0");
+      game.onType("any_00");
+      game.onType("any_000");
+      game.onType("any_0000");
+
+      expect(game.mistakes).toBe(8);
+    });
   });
 });
