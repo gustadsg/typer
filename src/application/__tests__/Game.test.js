@@ -60,5 +60,15 @@ describe("test", () => {
 
       expect(game.mistakes).toBe(8);
     });
+
+    it("should count the mistakes with typed bigger than text", () => {
+      const text = "a";
+      const game = new Game(text);
+
+      game.onType("a");
+      game.onType("ab");
+
+      expect(game.mistakes).toBe(1);
+    });
   });
 });
