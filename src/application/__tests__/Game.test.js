@@ -1,9 +1,6 @@
 import Game from "../Game";
 
-global.setTimeout = jest.fn((callback, timeInMilliseconds) => {
-  callback();
-  return timeInMilliseconds;
-});
+jest.useFakeTimers();
 
 function makeSUT({ text = "any_text", timeInSeconds = 60 }) {
   const game = new Game({
@@ -45,16 +42,33 @@ describe("test", () => {
     });
 
     it("should end game after given time", () => {
-      const timeInSeconds = 60;
+      const timeInSeconds = 10;
       const { game } = makeSUT({ timeInSeconds });
       const endGameSpy = jest.spyOn(game, "endGame");
+      const setTimeoutSpy = jest.spyOn(global, "setTimeout");
 
       game.onType("a");
+      expect(game.ended).toBe(false);
+
+      jest.runAllTimers();
 
       expect(game.ended).toBe(true);
       expect(endGameSpy).toBeCalledTimes(1);
-      expect(setTimeout).toBeCalledTimes(1);
-      expect(setTimeout).toHaveReturnedWith(timeInSeconds * 1000);
+      expect(setTimeoutSpy).toBeCalledTimes(1);
+      expect(setTimeoutSpy).toHaveBeenCalledWith(
+        expect.any(Function),
+        timeInSeconds * 1000
+      );
+    });
+
+    it("should not change if onType is called after game has ended", () => {
+      const { game } = makeSUT({});
+
+      game.onType("a");
+      jest.runAllTimers();
+      game.onType("ab");
+
+      expect(game.typed).toBe("a");
     });
 
     it("should append typed letter to typed internal var", () => {

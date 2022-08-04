@@ -9,6 +9,7 @@ export default class Game {
   }
 
   onType(newTyped) {
+    if (this.ended) return;
     if (!this.started) this.startGame();
 
     if (newTyped.length < this.typed.length) {
