@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Game from "../application/Game";
+import EnglishTextRequester from "../application/EnglishTextRequester";
+
+import "./app.css";
 
 const gameTimeInSeconds = 30;
 
@@ -19,19 +22,19 @@ function useInterval(callback, delay) {
 }
 
 function Letter({ correct, typed }) {
-  const color = correct === typed ? "green" : "red";
+  const color = correct === typed ? "text-correct" : "text-wrong";
 
-  return <span style={{ color: typed ? color : "grey" }}>{correct}</span>;
+  return <span className={typed ? color : "text-default"}>{correct}</span>;
 }
 
 function App() {
-  const [phrasesList, setPhrasesList] = useState([]);
   const [gameText, setGameText] = useState("");
 
   const inputRef = useRef(null);
   const gameRef = useRef(
     new Game({ text: gameText, timeInSeconds: gameTimeInSeconds })
   );
+  const textRequester = useRef(new EnglishTextRequester());
 
   const [, updateState] = useState();
   const forceUpdate = useCallback(() => updateState({}), []);
@@ -40,23 +43,10 @@ function App() {
   const passedTime = (new Date() - startTime) / 1000;
   const remainigTime = (gameTimeInSeconds - passedTime).toFixed(0);
 
-  const fetchAndSetText = () =>
-    fetch(
-      "https://api.themoviedb.org/3/trending/all/day?api_key=6a5284a99c6f041ce28059355ef6484d"
-    ).then((response) => {
-      response.json().then((result) => {
-        const randomIndex = Math.floor(Math.random() * 10);
-        const numberOfOvberviews = 8;
-        const randomTexts = result.results
-          .filter((movie) => movie.overview)
-          .map((movie) => movie.overview);
-
-        setPhrasesList(randomTexts);
-        setGameText(
-          randomTexts.slice(randomIndex, numberOfOvberviews).join("")
-        );
-      });
-    });
+  async function fetchAndSetText() {
+    const text = await textRequester.current.getText();
+    setGameText(text);
+  }
 
   useEffect(() => {
     fetchAndSetText();
@@ -82,12 +72,9 @@ function App() {
     inputRef.current.focus();
   }
 
-  function replay() {
-    const randomIndex = Math.floor(Math.random() * 10);
-    const numberOfOvberviews = 8;
-
-    setGameText(phrasesList.slice(randomIndex, numberOfOvberviews).join(""));
+  async function replay() {
     inputRef.current.value = "";
+    await fetchAndSetText();
     gameRef.current = new Game({
       text: gameText,
       timeInSeconds: gameTimeInSeconds,
@@ -100,7 +87,7 @@ function App() {
         type="text"
         ref={inputRef}
         onChange={handleChange}
-        style={{ opacity: 0 }}
+        style={{ opacity: 0, height: 0, width: 0 }}
       />
 
       {remainigTime > 0 && <p>Tempo Restante: {remainigTime}</p>}
@@ -108,7 +95,7 @@ function App() {
 
       <p>Velocidade: {gameRef.current.speed.wpm.toFixed(2)}</p>
 
-      <div onClick={focusOnTextArea}>
+      <div className="text-container" onClick={focusOnTextArea}>
         {gameText?.split("").map((correct, index) => (
           <Letter
             key={index}
@@ -117,7 +104,9 @@ function App() {
           />
         ))}
       </div>
-      <button onClick={replay}>replay</button>
+      <button className="replay-btn" onClick={replay}>
+        replay
+      </button>
     </div>
   );
 }

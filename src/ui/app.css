@@ -1,0 +1,51 @@
+:root {
+  --background: #191919;
+  --primary: #2D4263;
+  --secondary: #C84B31;
+  --text: #ECDBBA;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text);
+  padding: 16px;
+}
+
+p {
+  font-size: 1.6rem;
+}
+
+span {
+  font-size: 1.4rem;
+}
+
+.text-container {
+  margin-bottom: 16px;
+  border: 3px solid var(--primary);
+  padding: 1.5rem;
+  border-radius: 10px;
+}
+
+.replay-btn {
+  background-color: var(--primary);
+  border: none;
+  outline: none;
+  font-size: 1.2rem;
+  color: var(--text);
+  padding: 16px 24px;
+  text-transform: uppercase;
+}
+
+.replay-btn:hover {
+  cursor: pointer;
+}
+
+.text-wrong {
+  color: var(--secondary);
+}
+.text-correct {
+  color: var(--primary);
+}
+.text-default {
+  color: grey;
+}
