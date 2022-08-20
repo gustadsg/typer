@@ -1,4 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback, useEffect, useRef, useState,
+} from "react";
+import PropTypes from "prop-types";
+
 import Game from "../application/Game";
 import EnglishTextRequester from "../application/EnglishTextRequester";
 
@@ -18,6 +22,7 @@ function useInterval(callback, delay) {
       const id = setInterval(() => savedCallback.current(), delay);
       return () => clearInterval(id);
     }
+    return null;
   }, [delay]);
 }
 
@@ -27,12 +32,21 @@ function Letter({ correct, typed }) {
   return <span className={typed ? color : "text-default"}>{correct}</span>;
 }
 
+Letter.propTypes = {
+  correct: PropTypes.string.isRequired,
+  typed: PropTypes.string,
+};
+
+Letter.defaultProps = {
+  typed: "",
+};
+
 function App() {
   const [gameText, setGameText] = useState("");
 
   const inputRef = useRef(null);
   const gameRef = useRef(
-    new Game({ text: gameText, timeInSeconds: gameTimeInSeconds })
+    new Game({ text: gameText, timeInSeconds: gameTimeInSeconds }),
   );
   const textRequester = useRef(new EnglishTextRequester());
 
@@ -53,8 +67,7 @@ function App() {
   }, []);
 
   useInterval(() => {
-    const shouldReload =
-      !gameRef.current.ended && Boolean(gameRef.current.startedAt);
+    const shouldReload = !gameRef.current.ended && Boolean(gameRef.current.startedAt);
     if (shouldReload) {
       forceUpdate();
       gameRef.current.getTypingSpeed();
@@ -90,21 +103,37 @@ function App() {
         style={{ opacity: 0, height: 0, width: 0 }}
       />
 
-      {remainigTime > 0 && <p>Tempo Restante: {remainigTime}</p>}
+      {remainigTime > 0 && (
+      <p>
+        Tempo Restante:
+        {" "}
+        {remainigTime}
+      </p>
+      )}
       {remainigTime <= 0 && <p>Tempo Restante: 0</p>}
 
-      <p>Velocidade: {gameRef.current.speed.wpm.toFixed(2)}</p>
+      <p>
+        Velocidade:
+        {" "}
+        {gameRef.current.speed.wpm.toFixed(2)}
+      </p>
 
-      <div className="text-container" onClick={focusOnTextArea}>
+      <div
+        className="text-container"
+        onClick={focusOnTextArea}
+        role="button"
+        onKeyDown={focusOnTextArea}
+        tabIndex={0}
+      >
         {gameText?.split("").map((correct, index) => (
           <Letter
-            key={index}
+            key={`${correct}-${gameRef.current.typed[index]}`}
             correct={correct}
             typed={gameRef.current.typed[index]}
           />
         ))}
       </div>
-      <button className="replay-btn" onClick={replay}>
+      <button className="replay-btn" type="button" onClick={replay}>
         replay
       </button>
     </div>
