@@ -43,7 +43,7 @@ describe("EnglishTestRequester", () => {
 
     it("should respect max characters", async () => {
       const sut = makeSUT();
-      const getRandomNumberSpy = jest.spyOn(sut, "getRandomNumber");
+      const getRandomNumberSpy = jest.spyOn(sut, "getRandomNumber").mockReturnValueOnce(0);
 
       const text = await sut.getText();
 
