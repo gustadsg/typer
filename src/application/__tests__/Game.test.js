@@ -15,7 +15,7 @@ function makeSUT({ text = "any_text", timeInSeconds = ONE_MINUTE_IN_SECONDS }) {
   return { game, text, timeInSeconds };
 }
 
-describe("test", () => {
+describe("Game", () => {
   it("should create an empty game", () => {
     const { text, game } = makeSUT({});
 
